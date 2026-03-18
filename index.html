@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseGate — 피로도를 읽고, 사고를 막다</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(29,29,31,0.08);
+      --card: rgba(255,255,255,0.72);
+      --accent: #0071e3;
+      --accent-soft: rgba(0,113,227,0.1);
+      --shadow: 0 18px 60px rgba(0,0,0,0.08);
+      --radius: 28px;
+      --max: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(245,245,247,0.72);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .cta-small {
+      background: var(--text);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 72px 24px 48px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+      min-height: 84vh;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c2ff, #0071e3);
+      box-shadow: 0 0 0 8px rgba(0,113,227,0.08);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 7vw, 84px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+    }
+
+    .hero p {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 24px);
+      max-width: 640px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn {
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 15px;
+      border: 1px solid transparent;
+      transition: 0.25s ease;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary {
+      border-color: var(--line);
+      background: rgba(255,255,255,0.65);
+      color: var(--text);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 520px;
+    }
+
+    .glow {
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, rgba(0,113,227,0.22), rgba(0,113,227,0.02) 62%, transparent 74%);
+      filter: blur(8px);
+    }
+
+    .device-card {
+      position: relative;
+      width: min(100%, 520px);
+      padding: 26px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
+      box-shadow: 0 24px 80px rgba(0,0,0,0.12);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.7);
+    }
+
+    .device-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 26px;
+      object-fit: contain;
+      background: linear-gradient(180deg, #fafafa, #f0f0f2);
+      padding: 20px;
+      display: block;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .floating-chip {
+      position: absolute;
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255,255,255,0.7);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .chip-top { top: -12px; right: -10px; }
+    .chip-bottom { left: -20px; bottom: 36px; }
+
+    .chip-number {
+      display: block;
+      color: var(--text);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-top: 4px;
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 90px 24px;
+    }
+
+    .section-header {
+      max-width: 760px;
+      margin-bottom: 42px;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-header p {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.8);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.05);
+      backdrop-filter: blur(16px);
+    }
+
+    .card h3 {
+      margin: 18px 0 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      display: grid;
+      place-items: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 22px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding: 28px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.68));
+      box-shadow: 0 14px 40px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.75);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      display: inline-flex;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--text);
+      color: white;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .dark-band {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .dark-band .section-header p,
+    .dark-band .metric p,
+    .dark-band .scenario p {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .metric {
+      padding: 30px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 12px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .scenario {
+      padding: 34px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.05);
+    }
+
+    .scenario.badge-red { outline: 2px solid rgba(255,59,48,0.18); }
+    .scenario.badge-blue { outline: 2px solid rgba(0,113,227,0.18); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pill.red { background: rgba(255,59,48,0.1); color: #d93025; }
+    .pill.blue { background: rgba(0,113,227,0.1); color: var(--accent); }
+
+    .scenario h3 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      letter-spacing: -0.04em;
+    }
+
+    .footer-cta {
+      text-align: center;
+      padding: 50px 24px 90px;
+    }
+
+    .footer-cta .panel {
+      max-width: 980px;
+      margin: 0 auto;
+      border-radius: 40px;
+      padding: 54px 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.72));
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.08);
+    }
+
+    .footer-cta h2 { margin-bottom: 16px; }
+    .footer-cta p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .footer-links {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    footer {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero,
+      .comparison,
+      .workflow,
+      .grid-3,
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 48px;
+      }
+
+      .hero-visual { min-height: 420px; }
+      .nav-links { display: none; }
+      .chip-top { right: 10px; }
+      .chip-bottom { left: 10px; bottom: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">Pulse<span>Gate</span></a>
+      <div class="nav-links">
+        <a href="#solution">솔루션</a>
+        <a href="#how">작동 방식</a>
+        <a href="#impact">기대 효과</a>
+        <a href="#contact">문의</a>
+      </div>
+      <a class="cta-small" href="#contact">도입 문의</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> 산업 현장의 안전을 위한 피로도 기반 출근 판단 시스템</div>
+        <h1>출근 전,<br>사고를 먼저 막다.</h1>
+        <p>
+          스마트 워치로 수집한 생체 데이터를 바탕으로 피로도를 정량화하고,
+          작업 가능 여부를 판단하여 산업 현장의 재해 위험을 사전에 낮추는 안전 관리 플랫폼입니다.
+        </p>
+        <div class="hero-actions">
+          <a href="#solution" class="btn btn-primary">솔루션 보기</a>
+          <a href="#how" class="btn btn-secondary">작동 방식 보기</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="glow"></div>
+        <div class="device-card">
+          <img src="image.png" alt="스마트 워치 기반 피로도 측정 제품 이미지" class="device-image" />
+          <div class="floating-chip chip-top">
+            실시간 피로 지수
+            <span class="chip-number">84</span>
+          </div>
+          <div class="floating-chip chip-bottom">
+            출근 판단
+            <span class="chip-number">Hold</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="solution">
+      <div class="section-header">
+        <div class="section-label">Solution</div>
+        <h2>감이 아니라, 데이터로<br>현장의 안전을 결정합니다.</h2>
+        <p>
+          단순 출결 관리가 아닙니다. 작업자의 컨디션을 읽고,
+          위험한 출근과 배치를 줄이기 위한 사전 예방형 안전 시스템입니다.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon">01</div>
+          <h3>Wearable Sensing</h3>
+          <p>스마트 워치로 심박, 수면, 활동량 등 피로도 판단에 필요한 데이터를 수집합니다.</p>
+        </div>
+        <div class="card">
+          <div class="icon">02</div>
+          <h3>Fatigue Scoring</h3>
+          <p>누적 피로 상태를 지수화해 직관적인 기준으로 관리자가 빠르게 판단할 수 있게 합니다.</p>
+        </div>
+        <div class="card">
+          <div class="icon">03</div>
+          <h3>Access Decision</h3>
+          <p>출근 가능, 주의 필요, 휴식 권고와 같은 단계별 판정으로 현장 투입 여부를 지원합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="section-header">
+        <div class="section-label">How it works</div>
+        <h2>하루의 시작을 더 안전하게 만드는<br>4단계 프로세스</h2>
+        <p>복잡한 운영 환경에서도 빠르게 적용할 수 있도록, 판단 흐름은 명확하고 간결하게 설계했습니다.</p>
+      </div>
+
+      <div class="workflow">
+        <div class="step">
+          <h3>데이터 수집</h3>
+          <p>웨어러블 디바이스가 사용자 상태를 자동으로 기록합니다.</p>
+        </div>
+        <div class="step">
+          <h3>피로도 분석</h3>
+          <p>수집된 데이터를 바탕으로 피로 지수를 계산합니다.</p>
+        </div>
+        <div class="step">
+          <h3>기준 비교</h3>
+          <p>사전에 설정한 안전 기준과 비교해 위험 수준을 판단합니다.</p>
+        </div>
+        <div class="step">
+          <h3>출근 판단</h3>
+          <p>현장 배치 전 단계에서 출근 가능 여부를 제안합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-band" id="impact">
+      <div class="section-header">
+        <div class="section-label">Impact</div>
+        <h2>사고 이후의 대응보다,<br>사고 이전의 차단이 더 중요합니다.</h2>
+        <p>위험 신호를 늦게 발견할수록 비용은 커집니다. PulseGate는 가장 앞단에서 리스크를 관리합니다.</p>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <strong>Pre-check</strong>
+          <p>작업 시작 전에 위험 상태를 먼저 식별합니다.</p>
+        </div>
+        <div class="metric">
+          <strong>Real-time</strong>
+          <p>빠른 상태 확인으로 현장 운영의 반응 속도를 높입니다.</p>
+        </div>
+        <div class="metric">
+          <strong>Safer shift</strong>
+          <p>사람 중심의 배치 판단으로 재해 가능성을 낮춥니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <div class="section-label">Scenario</div>
+        <h2>같은 출근, 전혀 다른 결과.</h2>
+        <p>피로도를 보지 않는 운영과 피로도를 반영하는 운영은 현장 안전 수준에서 분명한 차이를 만듭니다.</p>
+      </div>
+
+      <div class="comparison">
+        <div class="scenario badge-red">
+          <div class="pill red">Without PulseGate</div>
+          <h3>이상 징후를 놓친 출근</h3>
+          <p>
+            컨디션 저하 상태를 확인하지 못한 채 현장 투입이 이뤄지고,
+            집중력 저하와 반응 속도 감소가 사고 가능성을 키웁니다.
+          </p>
+        </div>
+        <div class="scenario badge-blue">
+          <div class="pill blue">With PulseGate</div>
+          <h3>출근 전 위험을 차단</h3>
+          <p>
+            피로도 기준을 넘어선 작업자는 사전 식별되고,
+            현장 배치 조정이나 휴식 권고를 통해 위험 노출을 줄일 수 있습니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer-cta" id="contact">
+      <div class="panel">
+        <div class="section-label">Contact</div>
+        <h2>현장의 안전 기준을<br>한 단계 더 높이세요.</h2>
+        <p>
+          스마트 워치 기반 피로도 측정과 출근 판단 시스템으로,
+          산업 현장의 예방 중심 안전 관리를 시작할 수 있습니다.
+        </p>
+        <div class="footer-links">
+          <a href="mailto:contact@example.com" class="btn btn-primary">도입 문의하기</a>
+          <a href="#top" class="btn btn-secondary">맨 위로</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    PulseGate — Fatigue-Informed Workforce Safety System
+  </footer>
+</body>
+</html>
