@@ -16,6 +16,7 @@
       --shadow: 0 18px 60px rgba(0,0,0,0.08);
       --radius: 28px;
       --max: 1200px;
+      --danger: #d93025;
     }
 
     * { box-sizing: border-box; }
@@ -63,15 +64,6 @@
       gap: 24px;
       color: var(--muted);
       font-size: 14px;
-    }
-
-    .cta-small {
-      background: var(--text);
-      color: white;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 600;
     }
 
     .hero {
@@ -135,6 +127,7 @@
       font-size: 15px;
       border: 1px solid transparent;
       transition: 0.25s ease;
+      cursor: pointer;
     }
 
     .btn-primary {
@@ -398,6 +391,160 @@
       letter-spacing: -0.04em;
     }
 
+    .comments-wrap {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .comment-form,
+    .comment-list-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.72));
+      border: 1px solid rgba(255,255,255,0.85);
+      border-radius: 32px;
+      padding: 28px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.06);
+    }
+
+    .comment-form h3,
+    .comment-list-panel h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .comment-form p,
+    .comment-list-panel p,
+    .empty-comment {
+      color: var(--muted);
+      margin-top: 0;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .field label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid rgba(29,29,31,0.12);
+      background: rgba(255,255,255,0.9);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .field textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(0,113,227,0.55);
+      box-shadow: 0 0 0 4px rgba(0,113,227,0.08);
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(217,48,37,0.18);
+    }
+
+    .helper-text {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .comment-count {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .comment-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .comment-item {
+      padding: 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(29,29,31,0.08);
+    }
+
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .comment-name {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .comment-date {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .comment-body {
+      white-space: pre-wrap;
+      color: var(--text);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .comment-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .text-button {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .text-button:hover {
+      color: var(--danger);
+    }
+
     .footer-cta {
       text-align: center;
       padding: 50px 24px 90px;
@@ -441,7 +588,8 @@
       .comparison,
       .workflow,
       .grid-3,
-      .metrics {
+      .metrics,
+      .comments-wrap {
         grid-template-columns: 1fr;
       }
 
@@ -465,9 +613,8 @@
         <a href="#solution">솔루션</a>
         <a href="#how">작동 방식</a>
         <a href="#impact">기대 효과</a>
-        <a href="#contact">문의</a>
+        <a href="#comments">의견 공유</a>
       </div>
-      <a class="cta-small" href="#contact">도입 문의</a>
     </div>
   </nav>
 
@@ -608,17 +755,41 @@
       </div>
     </section>
 
-    <section class="footer-cta" id="contact">
-      <div class="panel">
-        <div class="section-label">Contact</div>
-        <h2>현장의 안전 기준을<br>한 단계 더 높이세요.</h2>
-        <p>
-          스마트 워치 기반 피로도 측정과 출근 판단 시스템으로,
-          산업 현장의 예방 중심 안전 관리를 시작할 수 있습니다.
-        </p>
-        <div class="footer-links">
-          <a href="mailto:contact@example.com" class="btn btn-primary">도입 문의하기</a>
-          <a href="#top" class="btn btn-secondary">맨 위로</a>
+    <section class="section" id="comments">
+      <div class="section-header">
+        <div class="section-label">Community</div>
+        <h2>의견을 남기고<br>아이디어를 함께 나누세요.</h2>
+      </div>
+
+      <div class="comments-wrap">
+        <div class="comment-form">
+          <h3>의견 남기기</h3>
+          <p>궁금한 점, 개선 아이디어, 협업 제안 등을 자유롭게 작성해 주세요.</p>
+
+          <form id="commentForm">
+            <div class="field">
+              <label for="author">이름</label>
+              <input id="author" name="author" type="text" maxlength="30" placeholder="이름을 입력해 주세요" required />
+            </div>
+
+            <div class="field">
+              <label for="message">내용</label>
+              <textarea id="message" name="message" maxlength="1000" placeholder="의견을 입력해 주세요" required></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">댓글 등록</button>
+              <button type="reset" class="btn btn-secondary">초기화</button>
+              <button type="button" class="btn btn-danger" id="clearAllBtn">전체 삭제</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="comment-list-panel">
+          <h3>남겨진 의견</h3>
+          <p>현장 사용자와 관리자 의견을 모아 더 나은 안전 시스템으로 발전시킬 수 있습니다.</p>
+          <div class="comment-count" id="commentCount">총 0개</div>
+          <div class="comment-list" id="commentList"></div>
         </div>
       </div>
     </section>
@@ -627,5 +798,111 @@
   <footer>
     PulseGate — Fatigue-Informed Workforce Safety System
   </footer>
+
+  <script>
+    const STORAGE_KEY = 'pulsegate-comments-v1';
+    const form = document.getElementById('commentForm');
+    const authorInput = document.getElementById('author');
+    const messageInput = document.getElementById('message');
+    const commentList = document.getElementById('commentList');
+    const commentCount = document.getElementById('commentCount');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function loadComments() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveComments(comments) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
+    }
+
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return new Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    }
+
+    function renderComments() {
+      const comments = loadComments();
+      commentCount.textContent = `총 ${comments.length}개`;
+
+      if (!comments.length) {
+        commentList.innerHTML = '<div class="empty-comment">아직 등록된 의견이 없습니다. 첫 번째 의견을 남겨 보세요.</div>';
+        return;
+      }
+
+      commentList.innerHTML = comments.map(comment => `
+        <article class="comment-item">
+          <div class="comment-meta">
+            <div class="comment-name">${escapeHtml(comment.author)}</div>
+            <div class="comment-date">${formatDate(comment.createdAt)}</div>
+          </div>
+          <p class="comment-body">${escapeHtml(comment.message)}</p>
+          <div class="comment-actions">
+            <button class="text-button" type="button" onclick="deleteComment('${comment.id}')">삭제</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function deleteComment(id) {
+      const comments = loadComments().filter(comment => comment.id !== id);
+      saveComments(comments);
+      renderComments();
+    }
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const author = authorInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!author || !message) {
+        alert('이름과 내용을 모두 입력해 주세요.');
+        return;
+      }
+
+      const comments = loadComments();
+      comments.unshift({
+        id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+        author,
+        message,
+        createdAt: new Date().toISOString()
+      });
+
+      saveComments(comments);
+      form.reset();
+      renderComments();
+      document.getElementById('comments').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    clearAllBtn.addEventListener('click', function () {
+      const ok = window.confirm('저장된 댓글을 모두 삭제할까요?');
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderComments();
+    });
+
+    renderComments();
+    window.deleteComment = deleteComment;
+  </script>
 </body>
 </html>
