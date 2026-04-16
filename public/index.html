@@ -1,0 +1,2699 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseGate — 안전한 노동환경을 위한 제안</title>
+  <style>
+    :root {
+      --bg: #f5f5f7;
+      --text: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(29,29,31,0.08);
+      --card: rgba(255,255,255,0.82);
+      --accent: #0071e3;
+      --accent-soft: rgba(0,113,227,0.1);
+      --shadow: 0 18px 60px rgba(0,0,0,0.08);
+      --shadow-soft: 0 10px 35px rgba(0,0,0,0.05);
+      --radius: 28px;
+      --max: 1200px;
+      --danger: #ff453a;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(0,113,227,0.07), transparent 26%),
+        radial-gradient(circle at 80% 12%, rgba(58,160,255,0.07), transparent 22%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(245,245,247,0.72);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.03em;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-small {
+      background: var(--text);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-soft);
+      white-space: nowrap;
+    }
+
+    .hero {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 72px 24px 48px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 48px;
+      align-items: center;
+      min-height: 84vh;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c2ff, #0071e3);
+      box-shadow: 0 0 0 8px rgba(0,113,227,0.08);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 7vw, 84px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+    }
+
+    .hero p {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 24px);
+      max-width: 680px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn {
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 15px;
+      border: 1px solid transparent;
+      transition: 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: white;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-secondary, .btn-ghost {
+      border-color: var(--line);
+      background: rgba(255,255,255,0.7);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      border-color: rgba(255,69,58,0.12);
+      background: rgba(255,69,58,0.06);
+      color: var(--danger);
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 560px;
+    }
+
+    .glow {
+      position: absolute;
+      width: 460px;
+      height: 460px;
+      background: radial-gradient(circle, rgba(0,113,227,0.22), rgba(0,113,227,0.02) 62%, transparent 74%);
+      filter: blur(8px);
+    }
+
+    .device-card {
+      position: relative;
+      width: min(100%, 540px);
+      padding: 26px;
+      border-radius: 36px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,255,255,0.62));
+      box-shadow: 0 24px 80px rgba(0,0,0,0.12);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.7);
+      transform: perspective(1200px) rotateY(-8deg) rotateX(4deg);
+      transform-style: preserve-3d;
+    }
+
+    .device-image {
+      width: 100%;
+      aspect-ratio: 1/1;
+      border-radius: 26px;
+      object-fit: contain;
+      background: linear-gradient(180deg, #fafafa, #f0f0f2);
+      padding: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .floating-chip {
+      position: absolute;
+      padding: 14px 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.08);
+      border: 1px solid rgba(255,255,255,0.7);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .chip-top { top: -12px; right: -10px; }
+    .chip-bottom { left: -20px; bottom: 36px; }
+
+    .chip-number {
+      display: block;
+      color: var(--text);
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-top: 4px;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 30px;
+      max-width: 760px;
+    }
+
+    .hero-stat {
+      padding: 18px 20px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .hero-stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 96px 24px;
+    }
+
+    .section-header {
+      max-width: 860px;
+      margin-bottom: 42px;
+    }
+
+    .section-label {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .section-header p {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.82));
+      border: 1px solid rgba(29,29,31,0.08);
+      border-radius: 24px;
+      padding: 22px 22px 24px;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.06);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.65;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 44px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding: 28px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.68));
+      box-shadow: 0 14px 40px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.75);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: "0" counter(step);
+      display: inline-flex;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--text);
+      color: white;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .dark-band {
+      position: relative;
+      width: 100vw;
+      max-width: none;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      padding-left: max(24px, calc((100vw - var(--max)) / 2 + 24px));
+      padding-right: max(24px, calc((100vw - var(--max)) / 2 + 24px));
+      background: linear-gradient(180deg, #050507, #111114);
+      color: #fff;
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    .dark-band .section-header p,
+    .dark-band .metric p,
+    .dark-band .scenario p,
+    .dark-band .data-note,
+    .dark-band .table-note,
+    .dark-band .sim-card p,
+    .dark-band .sim-mini p {
+      color: rgba(255,255,255,0.72);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .metric {
+      padding: 30px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 12px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .scenario {
+      padding: 34px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.05);
+    }
+
+    .scenario.badge-red { outline: 2px solid rgba(255,59,48,0.18); }
+    .scenario.badge-blue { outline: 2px solid rgba(0,113,227,0.18); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .pill.red { background: rgba(255,59,48,0.1); color: #d93025; }
+    .pill.blue { background: rgba(0,113,227,0.1); color: var(--accent); }
+
+    .scenario h3 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      letter-spacing: -0.04em;
+    }
+
+    .simulation-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .simulation-stack {
+      display: grid;
+      gap: 24px;
+    }
+
+    .simulation-subgrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .simulation-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .chart-card,
+    .sim-card,
+    .table-card,
+    .sim-mini {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 30px;
+      padding: 28px;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.14);
+    }
+
+    .table-card,
+    .chart-card { background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02)); }
+
+    .card-top {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card-top h3,
+    .sim-card h3,
+    .sim-mini h3 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.04em;
+    }
+
+    .card-top p,
+    .sim-card p,
+    .sim-mini p,
+    .table-note,
+    .data-note {
+      margin: 8px 0 0;
+      font-size: 15px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      color: #fff;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    th {
+      color: rgba(255,255,255,0.7);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.01em;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    .highlight-cell { color: #fff; font-weight: 700; }
+
+    .sim-side { display: grid; gap: 24px; }
+
+    .sim-kicker {
+      color: #7bb4ff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .big-number {
+      font-size: clamp(52px, 7vw, 84px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      margin: 8px 0 12px;
+      font-weight: 700;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 22px 0;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .sim-mini strong {
+      display: block;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 10px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 380px;
+      overflow: hidden;
+    }
+
+    .canvas-wrap canvas {
+      width: 100% !important;
+      max-width: 100%;
+      display: block;
+    }
+
+    .approval-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .approval-left {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 24px;
+    }
+
+    .approval-total,
+    .quote-card,
+    .approval-chart-card {
+      padding: 30px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.82));
+      border: 1px solid rgba(29,29,31,0.08);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.06);
+    }
+
+    .approval-kicker {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .approval-big {
+      font-size: clamp(56px, 8vw, 92px);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+
+    .approval-sub {
+      color: var(--muted);
+      font-size: 16px;
+      margin: 0;
+    }
+
+    .fact-note,
+    .quote-card p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .approval-chart-head h3 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .approval-chart-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .approval-chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 360px;
+      margin-top: 18px;
+    }
+
+    .approval-chart-wrap.tall {
+      min-height: 520px;
+    }
+
+    .quote-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .quote-mark {
+      font-size: 42px;
+      line-height: 1;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .quote-source {
+      margin-top: 14px;
+      font-weight: 700;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    /* creators */
+    .creator-section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 24px 24px 88px;
+    }
+
+    .creator-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .creator-card {
+      position: relative;
+      min-height: 300px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.82));
+      border: 1px solid rgba(29,29,31,0.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+      backdrop-filter: blur(18px);
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s cubic-bezier(.2,.8,.2,1), border-color .3s ease;
+      isolation: isolate;
+    }
+
+    .creator-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(0,113,227,0.15), rgba(125,211,252,0.06), rgba(255,255,255,0));
+      opacity: 0;
+      transition: opacity .35s ease;
+      z-index: 0;
+    }
+
+    .creator-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -70px;
+      top: -70px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,113,227,0.16), transparent 72%);
+      opacity: .75;
+      z-index: 0;
+      transition: transform .4s ease, opacity .4s ease;
+    }
+
+    .creator-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.11);
+      border-color: rgba(0,113,227,0.16);
+    }
+
+    .creator-card:hover::before { opacity: 1; }
+    .creator-card:hover::after {
+      transform: scale(1.08);
+      opacity: 1;
+    }
+
+    .creator-card-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+    }
+
+    .creator-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .creator-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,113,227,0.1);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .creator-name {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .creator-role {
+      display: inline-flex;
+      margin-top: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      background: rgba(0,113,227,0.08);
+      color: var(--accent);
+    }
+
+    .creator-preview {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.72;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .creator-toggle {
+      margin-top: auto;
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(29,29,31,0.1);
+      background: linear-gradient(135deg, #0071e3, #3b9cff);
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .22s ease, box-shadow .22s ease, opacity .22s ease;
+      box-shadow: 0 12px 24px rgba(0,113,227,0.18);
+      margin-top: 18px;
+    }
+
+    .creator-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px rgba(0,113,227,0.22);
+    }
+
+    .creator-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.42);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .32s ease;
+      z-index: 200;
+    }
+
+    .creator-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .creator-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(620px, 100vw);
+      height: 100vh;
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,249,252,0.95));
+      border-left: 1px solid rgba(29,29,31,0.08);
+      box-shadow: -24px 0 70px rgba(0,0,0,0.18);
+      transform: translateX(100%);
+      transition: transform .42s cubic-bezier(.22,1,.36,1);
+      display: flex;
+      flex-direction: column;
+      z-index: 210;
+    }
+
+    .creator-drawer.is-open {
+      transform: translateX(0);
+    }
+
+    .creator-drawer-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding: 24px 24px 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.86));
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(29,29,31,0.08);
+    }
+
+    .creator-drawer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .creator-drawer-badge {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,113,227,0.1);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .creator-drawer-title {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .creator-drawer-role {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      background: rgba(0,113,227,0.08);
+      color: var(--accent);
+    }
+
+    .creator-close {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid rgba(29,29,31,0.1);
+      background: rgba(255,255,255,0.84);
+      color: var(--text);
+      font: inherit;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .creator-close:hover {
+      transform: scale(1.04);
+      background: #fff;
+    }
+
+    .creator-drawer-body {
+      padding: 24px;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .creator-drawer-body p {
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
+
+    body.drawer-open {
+      overflow: hidden;
+    }
+
+    .comments-section {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 24px 24px 100px;
+    }
+
+    .comments-shell {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .comment-panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.76));
+      border: 1px solid rgba(255,255,255,0.85);
+      border-radius: 32px;
+      padding: 28px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.06);
+      backdrop-filter: blur(18px);
+    }
+
+    .comment-panel h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .comment-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .comment-field {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .comment-field label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .comment-field input,
+    .comment-field textarea {
+      width: 100%;
+      border: 1px solid rgba(29,29,31,0.12);
+      background: rgba(255,255,255,0.94);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+
+    .comment-field input:focus,
+    .comment-field textarea:focus {
+      border-color: rgba(0,113,227,0.55);
+      box-shadow: 0 0 0 4px rgba(0,113,227,0.08);
+      transform: translateY(-1px);
+    }
+
+    .comment-field textarea {
+      min-height: 180px;
+      resize: vertical;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .comment-helper {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .comment-count {
+      display: inline-flex;
+      margin-top: 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .comment-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .comment-item {
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(29,29,31,0.08);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+    }
+
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .comment-name {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .comment-date {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .comment-body {
+      white-space: pre-wrap;
+      color: var(--text);
+      line-height: 1.65;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .comment-item-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .comment-text-btn {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .comment-text-btn:hover { color: var(--danger); }
+
+    .empty-comment {
+      padding: 26px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.72);
+      border: 1px dashed rgba(29,29,31,0.12);
+      color: var(--muted);
+    }
+
+    footer {
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s ease, transform .8s ease;
+      will-change: transform, opacity;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #simulation {
+      padding-top: 72px;
+      padding-bottom: 72px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    #simulation .section-header,
+    #simulation .simulation-stack {
+      max-width: 1080px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #simulation .chart-card,
+    #simulation .table-card,
+    #simulation .sim-card,
+    #simulation .sim-mini {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    #simulation .simulation-two-col {
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.75fr);
+      align-items: stretch;
+    }
+
+    #simulation .sim-side {
+      display: grid;
+      gap: 24px;
+      min-width: 0;
+    }
+
+    #simulation .table-wrap {
+      min-width: 0;
+    }
+
+    #simulation .canvas-wrap {
+      width: 100%;
+      height: 300px;
+      min-height: 300px;
+      max-height: 300px;
+      overflow: hidden;
+    }
+
+    #simulation .chart-card:first-of-type .canvas-wrap {
+      height: 250px;
+      min-height: 250px;
+      max-height: 250px;
+    }
+
+    #simulation canvas {
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+    }
+
+    #simulation .sim-mini {
+      min-width: 0;
+      padding: 22px;
+    }
+
+    #simulation .sim-mini strong {
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      overflow-wrap: anywhere;
+      word-break: keep-all;
+    }
+
+    #simulation .sim-mini p {
+      font-size: 14px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    #simulation .growth-subgrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    #simulation .growth-subgrid .sim-mini {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 14px;
+      border-radius: 24px;
+      padding: 18px 20px;
+    }
+
+    #simulation .growth-subgrid .sim-mini strong {
+      order: 2;
+      text-align: right;
+      font-size: clamp(30px, 3.2vw, 52px);
+      margin-bottom: 0;
+    }
+
+    #simulation .growth-subgrid .sim-mini p {
+      order: 1;
+      margin: 0;
+      font-size: 15px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    @media (max-width: 1280px) {
+      #simulation .section-header,
+      #simulation .simulation-stack {
+        max-width: 980px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .hero,
+      .comments-shell,
+      .comparison,
+      .workflow,
+      .grid-3,
+      .metrics,
+      .simulation-grid,
+      .mini-grid,
+      .hero-stats,
+      .approval-layout,
+      .approval-left,
+      .creator-grid,
+      #simulation .simulation-two-col,
+      #simulation .simulation-subgrid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 48px;
+      }
+
+      .hero-visual { min-height: 420px; }
+      .nav-links { display: none; }
+      .chip-top { right: 10px; }
+      .chip-bottom { left: 10px; bottom: 16px; }
+      .device-card { transform: none; }
+      .section, .comments-section, .creator-section { padding-left: 20px; padding-right: 20px; }
+
+      .dark-band {
+        width: auto;
+        margin: 0;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      #simulation {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      #simulation .section-header,
+      #simulation .simulation-stack {
+        max-width: 100%;
+      }
+
+      #simulation .canvas-wrap,
+      #simulation .chart-card:first-of-type .canvas-wrap {
+        height: 260px;
+        min-height: 260px;
+        max-height: 260px;
+      }
+
+      .creator-card {
+        min-height: auto;
+      }
+
+      .creator-drawer {
+        width: 100vw;
+      }
+
+      .creator-drawer-title {
+        font-size: 28px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #simulation .growth-subgrid .sim-mini {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+      #simulation .growth-subgrid .sim-mini strong {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">Pulse<span>Gate</span></a>
+      <div class="nav-links">
+        <a href="#sdg">SDG-8</a>
+        <a href="#issue">문제 인식</a>
+        <a href="#solution">접근 방식</a>
+        <a href="#impact">영향</a>
+        <a href="#approval">승인통계</a>
+        <a href="#simulation">시뮬레이션</a>
+        <a href="#creators">제작자</a>
+        <a href="#comments">의견</a>
+      </div>
+      <a class="cta-small" href="#sdg">핵심 보기</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <section class="hero">
+      <div class="reveal">
+        <div class="eyebrow"><span class="dot"></span> 산업 안전을 위한 데이터 기반 접근</div>
+        <h1>피로를 먼저 읽고,<br>사고를 미리 줄이다.</h1>
+        <p>
+          피로와 온열 스트레스는 단순 불편이 아니라 생산성 저하, 건강비용 증가,
+          그리고 실제 산업재해로 이어질 수 있는 현장 리스크입니다. 이 페이지는 그 연결 구조와 대응 방향을 설명합니다.
+        </p>
+        <div class="hero-actions">
+          <a href="#issue" class="btn btn-primary">문제 보기</a>
+          <a href="#simulation" class="btn btn-secondary">시뮬레이션 보기</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>152명</strong>
+            <span>2018년 온열질환 사망자</span>
+          </div>
+          <div class="hero-stat">
+            <strong>89%</strong>
+            <span>7~8월 집중 비율</span>
+          </div>
+          <div class="hero-stat">
+            <strong>100만$</strong>
+            <span>근로자 1,000명 기업 연간 손실</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="glow"></div>
+        <div class="device-card">
+          <img src="images/image.png" alt="스마트 워치 기반 피로도 측정 이미지" class="device-image" />
+          <div class="floating-chip chip-top">
+            핵심 키워드
+            <span class="chip-number">Fatigue</span>
+          </div>
+          <div class="floating-chip chip-bottom">
+            현장 목표
+            <span class="chip-number">Safer Shift</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sdg">
+      <div class="section-header reveal">
+        <div class="section-label">SDG-8</div>
+        <h2>SDG 8 / SDG 8.8과 작업환경 안전의 연결</h2>
+        <p>
+          SDG 8은 양질의 일자리와 지속가능한 경제성장을 다루며, SDG 8.8은 노동권 보호와 안전한 작업환경 촉진을 명확히 포함합니다.
+          피로, 온열질환, 작업 중 사고의 연결 구조는 이 목표와 직접 맞닿아 있습니다.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal" style="grid-column: span 3;">
+          <div class="card-title-row">
+            <span class="icon">8</span>
+            <h3>SDG 8 — 양질의 일자리와 경제성장</h3>
+          </div>
+          <p>안전하고 건강한 환경에서 일할 수 있는 조건을 포함한 노동환경 전반의 질을 다룹니다.</p>
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">8.8</span>
+            <h3>노동권 보호</h3>
+          </div>
+          <p>고용이 불안정한 노동자와 이주노동자의 권리 보호를 핵심으로 합니다.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">W</span>
+            <h3>취약 집단 보호</h3>
+          </div>
+          <p>여성 노동자 등 보호 사각지대에 놓일 수 있는 집단의 안전 기준을 강화하는 방향과 연결됩니다.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">S</span>
+            <h3>안전한 작업환경</h3>
+          </div>
+          <p>산업 현장에서 발생하는 위험 요소를 줄이고 건강을 보호하는 환경 구축을 목표로 합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="issue">
+      <div class="section-header reveal">
+        <div class="section-label">Issue</div>
+        <h2>피로와 온열질환이 만드는 실제 문제</h2>
+        <p>
+          피로는 단기적으로는 집중력 저하와 판단 오류를 만들고, 장기적으로는 건강비용과 조직 운영비용을 증가시킵니다.
+          온열질환은 사망뿐 아니라 작업 중 2차 사고의 출발점이 되기도 합니다.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <h3>생산성 손실</h3>
+          <p>미국 안전위원회(NSC)에 따르면 근로자 1,000명 규모 기업은 연간 약 100만 달러의 생산성 손실을 겪습니다. 이 중 약 27만 달러는 결근, 약 77만 달러는 프리젠티즘으로 발생합니다.</p>
+        </div>
+        <div class="card reveal">
+          <h3>건강비용 증가</h3>
+          <p>피로는 불규칙한 식습관과 비만을 유발해 장기적으로 조직의 건강비용 부담을 키울 수 있습니다.</p>
+        </div>
+        <div class="card reveal">
+          <h3>마스크와 열 스트레스</h3>
+          <p>마스크 착용이 직접적으로 열사병을 일으키지는 않더라도, 열 발산을 방해하고 입김으로 인한 열기 유지에 영향을 줄 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div style="height:22px"></div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <h3>사망 발생 구조</h3>
+          <p>2018년 온열질환 사망자 152명 중 142명, 약 89%가 7월과 8월에 집중되었습니다. 대부분은 열사병으로 분류되었고, 열실신·열탈진·열경련도 함께 확인됐습니다.</p>
+        </div>
+        <div class="card reveal">
+          <h3>2차 사고 연결</h3>
+          <p>온열질환 초기 증상인 피로감, 어지러움, 두통, 빠른 심장박동은 추락·전도 같은 다양한 재해로 이어질 가능성이 큽니다.</p>
+        </div>
+        <div class="card reveal">
+          <h3>위험 집중 대상</h3>
+          <p>건설분야처럼 남성과 고령자가 많은 업종은 여름철 집중 점검과 홍보가 특히 중요합니다. 고령자, 이주노동자, 비정규 노동자도 더 큰 영향을 받을 수 있습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="approval">
+      <div class="section-header reveal">
+        <div class="section-label">Approved Cases</div>
+        <h2>최근 5년간 온열질환 산재 승인건수</h2>
+        <p>
+          최근 5년간 온열질환 산업재해 승인건수는 총 152건입니다. 연도별로는 2020년 13건, 2021년 19건,
+          2022년 23건, 2023년 31건, 2024년 51건으로 증가 흐름이 확인됩니다.
+        </p>
+      </div>
+
+      <div class="approval-layout">
+        <div class="approval-left">
+          <div class="approval-total reveal">
+            <div class="approval-kicker">5-Year Total</div>
+            <div class="approval-big">152건</div>
+            <p class="approval-sub">2020년부터 2024년까지 공식 승인된 온열질환 산업재해 누적 건수</p>
+            <div style="height:20px"></div>
+            <p class="fact-note">
+              다만 공식 승인 통계는 실제 현장 피해를 모두 반영하지 못할 가능성이 있습니다.
+              산재로 인정되려면 업무 관련성이 입증되어야 하고, 현장에서는 단순 탈진이나 어지럼증으로 기록되지 않고
+              넘어가는 사례가 적지 않기 때문입니다.
+            </p>
+          </div>
+
+          <div class="quote-card reveal">
+            <div class="quote-mark">“</div>
+            <p>
+              현장 주변에 체온 감지 센서 등을 설치해 열이 나는 노동자를 찾아내 예방 조치를 취할 수 있도록 관련 예산을 지원하면
+              온열질환 산재 예방에 효과적일 것입니다.
+            </p>
+            <div class="quote-source">김광현 고려대 노동대학원 교수</div>
+          </div>
+        </div>
+
+        <div class="approval-chart-card reveal">
+          <div class="approval-chart-head">
+            <div>
+              <h3>연도별 승인건수 추이</h3>
+              <p>2020년 13건에서 2024년 51건까지 증가한 흐름을 꺾은선 그래프로 정리했습니다.</p>
+            </div>
+          </div>
+          <div class="approval-chart-wrap tall">
+            <canvas id="approvalChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="solution">
+      <div class="section-header reveal">
+        <div class="section-label">Approach</div>
+        <h2>사고 이후 대응보다, 투입 전 판단</h2>
+        <p>
+          여름철 사망사고를 줄이기 위해서는 응급처치요령과 병원 후송체계뿐 아니라,
+          작업 투입 이전 단계에서 위험 신호를 먼저 읽고 조정하는 구조가 필요합니다.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">01</span>
+            <h3>현장 상태 감지</h3>
+          </div>
+          <p>심박, 수면, 활동량 등 피로도 판단에 필요한 데이터를 기반으로 현재 상태를 파악합니다.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">02</span>
+            <h3>위험 기준화</h3>
+          </div>
+          <p>누적 피로 상태를 지수화해 관리자가 동일한 기준으로 위험을 판단할 수 있게 합니다.</p>
+        </div>
+        <div class="card reveal">
+          <div class="card-title-row">
+            <span class="icon">03</span>
+            <h3>배치 조정과 대응</h3>
+          </div>
+          <p>휴식 권고, 작업 강도 조정, 응급 대응 연결을 포함해 현장 투입 여부를 더 안전하게 결정합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="section-header reveal">
+        <div class="section-label">How it works</div>
+        <h2>위험을 줄이기 위한 4단계 흐름</h2>
+        <p>복잡한 운영 환경에서도 빠르게 적용할 수 있도록 판단 흐름을 간결하게 구성했습니다.</p>
+      </div>
+
+      <div class="workflow">
+        <div class="step reveal">
+          <h3>데이터 수집</h3>
+          <p>웨어러블 디바이스가 사용자의 상태를 기록합니다.</p>
+        </div>
+        <div class="step reveal">
+          <h3>피로도 분석</h3>
+          <p>누적 피로와 온열 스트레스 위험을 계산합니다.</p>
+        </div>
+        <div class="step reveal">
+          <h3>기준 비교</h3>
+          <p>설정된 위험 기준과 비교해 주의 수준을 구분합니다.</p>
+        </div>
+        <div class="step reveal">
+          <h3>대응 판단</h3>
+          <p>작업 배치 조정, 휴식, 후송 연계 여부를 결정합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-band reveal" id="impact">
+      <div class="section-header">
+        <div class="section-label">Impact</div>
+        <h2>사망 사고뿐 아니라 운영 손실까지 줄이는 방향</h2>
+        <p>피로와 온열 스트레스를 먼저 관리하면 사고 리스크, 결근, 프리젠티즘, 건강비용 부담을 함께 줄일 수 있습니다.</p>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <strong>Pre-check</strong>
+          <p>작업 시작 전에 위험 상태를 먼저 식별합니다.</p>
+        </div>
+        <div class="metric">
+          <strong>Response</strong>
+          <p>응급처치와 병원 후송 체계를 더 빠르게 연결할 수 있습니다.</p>
+        </div>
+        <div class="metric">
+          <strong>Productivity</strong>
+          <p>결근과 프리젠티즘으로 인한 손실을 줄이는 기반이 됩니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scenario">
+      <div class="section-header reveal">
+        <div class="section-label">Scenario</div>
+        <h2>같은 출근, 다른 결과</h2>
+        <p>피로를 보지 않는 운영과 피로를 반영하는 운영은 현장 안전 수준에서 분명한 차이를 만듭니다.</p>
+      </div>
+
+      <div class="comparison">
+        <div class="scenario badge-red reveal">
+          <div class="pill red">Without Pre-check</div>
+          <h3>이상 징후를 놓친 출근</h3>
+          <p>컨디션 저하 상태를 확인하지 못한 채 현장 투입이 이뤄지고, 판단력 저하와 반응 속도 감소가 사고 가능성을 키웁니다.</p>
+        </div>
+        <div class="scenario badge-blue reveal">
+          <div class="pill blue">With Pre-check</div>
+          <h3>투입 전 위험을 차단</h3>
+          <p>피로도 기준을 넘어선 작업자는 먼저 식별되고, 현장 배치 조정이나 휴식 권고를 통해 위험 노출을 줄일 수 있습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark-band reveal" id="simulation">
+      <div class="section-header">
+        <div class="section-label">Simulation</div>
+        <h2>선형회귀 예측 + 시스템 도입 시 사망 감소 시나리오</h2>
+        <p>
+          아래 분석은 2020~2024년 승인건수 데이터를 바탕으로 한 선형회귀 예측입니다.
+        </p>
+      </div>
+
+      <div class="simulation-stack">
+        <div class="chart-card">
+          <div class="card-top">
+            <div>
+              <h3>1. 승인건수 추세와 단기 예측</h3>
+              <p class="data-note">2020~2024 실측치와 선형회귀 추세선을 함께 표시했습니다. 2025~2026은 회귀식 기반 예측치입니다.</p>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#7dd3fc;"></span>실측 승인건수</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#ffd166;"></span>선형회귀 추세선</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#34c759;"></span>예측 구간</span>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="forecastChart"></canvas>
+          </div>
+          <div class="simulation-subgrid">
+            <div class="sim-mini">
+              <strong id="regressionSlope">+8.8</strong>
+              <p>연평균 증가량</p>
+            </div>
+            <div class="sim-mini">
+              <strong id="forecastSummary">54 → 63</strong>
+              <p>2025 → 2026 예측치</p>
+            </div>
+            <div class="sim-mini">
+              <strong id="rSquaredValue">0.893</strong>
+              <p>선형회귀 설명력(R²)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="simulation-two-col">
+          <div class="table-card">
+            <div class="card-top">
+              <div>
+                <h3>2. 연도별 실측치와 예측치</h3>
+                <p class="table-note">실측 데이터와 선형회귀 추정치를 함께 정리했습니다.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>연도</th>
+                    <th>구분</th>
+                    <th>승인건수</th>
+                    <th>전년 대비 증감</th>
+                    <th>전년 대비 증가율</th>
+                    <th>회귀 추정치</th>
+                  </tr>
+                </thead>
+                <tbody id="forecastTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sim-side">
+            <div class="sim-card">
+              <div class="sim-kicker">Linear Regression</div>
+              <h3>회귀식 요약</h3>
+              <p>선형회귀 기준으로 승인건수는 매년 평균 약 <span id="regressionSlopeInline">8.8건</span>씩 증가하는 흐름으로 계산됩니다.</p>
+              <div class="divider"></div>
+              <p>회귀식: <span id="regressionEquation">y = 9.8 + 8.8x</span></p>
+            </div>
+
+            <div class="sim-card">
+              <div class="sim-kicker">Growth Indicators</div>
+              <h3>증가율 지표</h3>
+              <div class="simulation-subgrid growth-subgrid" style="margin-top:0;">
+                <div class="sim-mini">
+                  <strong id="cagrValue">40.7%</strong>
+                  <p>2020~2024 CAGR</p>
+                </div>
+                <div class="sim-mini">
+                  <strong id="latestIncreaseValue">64.5%</strong>
+                  <p>2024 전년 대비</p>
+                </div>
+                <div class="sim-mini">
+                  <strong id="forecast2026">63건</strong>
+                  <p>2026 예측</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="card-top">
+            <div>
+              <h3>3. 시스템 도입 시 예상 사망자 수 변화</h3>
+              <p class="data-note">2025~2026 승인건수 예측을 위험부담의 대리변수로 보고, 시스템 보급률·감지율·개입효과를 반영한 기준 시나리오입니다.</p>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#ff8a80;"></span>미도입</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#34c759;"></span>도입 후</span>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="deathImpactChart"></canvas>
+          </div>
+          <div class="simulation-subgrid">
+            <div class="sim-mini">
+              <strong id="referenceDeathValue">152명</strong>
+              <p>기준 참조 사망자수</p>
+            </div>
+            <div class="sim-mini">
+              <strong id="basePreventableValue">25.2%</strong>
+              <p>기준 시나리오 예방가능비율</p>
+            </div>
+            <div class="sim-mini">
+              <strong id="baseReduction2026Value">47.0명</strong>
+              <p>2026년 기준 예상 감소 인원</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="simulation-two-col">
+          <div class="table-card">
+            <div class="card-top">
+              <div>
+                <h3>4. 시스템 도입 시나리오별 비교</h3>
+                <p class="table-note">예방가능비율 = 보급률 × 위험감지율 × 개입효과. 2025~2026 무도입 예상 사망자 대비 감소 인원을 계산했습니다.</p>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>시나리오</th>
+                    <th>보급률</th>
+                    <th>감지율</th>
+                    <th>개입효과</th>
+                    <th>예방가능비율</th>
+                    <th>2025 도입 후</th>
+                    <th>2025 감소</th>
+                    <th>2026 도입 후</th>
+                    <th>2026 감소</th>
+                  </tr>
+                </thead>
+                <tbody id="systemScenarioBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="sim-side">
+            <div class="sim-card">
+              <div class="sim-kicker">Reference Assumption</div>
+              <h3>사망 추정 로직</h3>
+              <p>1) 선형회귀로 2025~2026 승인건수를 예측하고, 2) 2024 승인건수 51건 대비 증가율만큼 위험부담이 커진다고 가정한 뒤, 3) 기존 페이지의 연간 사망 참조값 152명을 같은 비율로 조정했습니다.</p>
+              <div class="divider"></div>
+              <p>무도입 예상 사망자 = 152 × (예측 승인건수 ÷ 51)</p>
+            </div>
+
+            <div class="sim-card">
+              <div class="sim-kicker">System Effect</div>
+              <h3>도입 효과 계산식</h3>
+              <p>예방가능비율 = 보급률 × 위험감지율 × 개입효과</p>
+              <div class="divider"></div>
+              <p>도입 후 예상 사망자 = 무도입 예상 사망자 × (1 - 예방가능비율)</p>
+              <p>감소 인원 = 무도입 예상 사망자 - 도입 후 예상 사망자</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="creator-section" id="creators">
+      <div class="section-header reveal">
+        <div class="section-label">Creators</div>
+        <h2>제작자들의 기록</h2>
+        <p>문제 인식부터 자료 조사, 시뮬레이션, 웹 구현까지 이어진 과정 속에서 각 제작자가 느낀 점을 정리했습니다.</p>
+      </div>
+
+      <div class="creator-grid">
+        <article class="creator-card reveal">
+          <div class="creator-card-inner">
+            <div class="creator-top">
+              <div>
+                <h3 class="creator-name">박승희</h3>
+                <span class="creator-role">팀장 · 자료조사 및 취합</span>
+              </div>
+              <span class="creator-badge">01</span>
+            </div>
+
+            <p class="creator-preview">
+              이번 프로젝트에서 주로 아이디어를 제안하고 이를 SDG 8.8과 연결해 프로젝트의 방향을 잡는 역할을 맡았다. 스마트워치 기반 산재 예방이라는 아이디어가 SDG 8.8의 안전한 작업환경 촉진이라는 목표와 자연스럽게 연결되었고, 팀원들도 이 방향을 잘 받아들여줘서 비교적 순조롭게 프로젝트를 진행할 수 있었다.
+            </p>
+
+            <button
+              class="creator-toggle"
+              type="button"
+              data-name="박승희"
+              data-role="팀장 · 자료조사 및 취합"
+              data-badge="01"
+              data-content="이번 프로젝트에서 주로 아이디어를 제안하고 이를 SDG 8.8과 연결해 프로젝트의 방향을 잡는 역할을 맡았다. 스마트워치 기반 산재 예방이라는 아이디어가 SDG 8.8의 안전한 작업환경 촉진이라는 목표와 자연스럽게 연결되었고, 팀원들도 이 방향을 잘 받아들여줘서 비교적 순조롭게 프로젝트를 진행할 수 있었다.
+
+프로젝트를 진행하면서 산업재해를 바라보는 시각이 크게 바뀌었다. 이전에는 산업재해를 그저 안타까운 사고 정도로 인식했지만, 직접 데이터를 찾고 원인을 분석하면서 이것이 예방 가능한 문제이며 과학 기술을 적극적으로 활용하면 실제로 많은 사람의 목숨을 구할 수 있다는 것을 실감했다.
+
+어려웠던 점도 있었다. 산재의 정확한 원인을 분석한 자료가 생각보다 적어 데이터를 찾는 데 많은 시간을 써야 했고, 수집한 데이터를 바탕으로 시뮬레이션 로직을 설계하는 과정도 쉽지 않았다. 단순히 수치를 나열하는 것이 아니라 논리적인 인과 구조로 연결해야 했기 때문이다.
+
+이번 활동을 통해 사회 문제를 과학적 근거와 기술로 접근하는 방식을 직접 경험할 수 있었고, 데이터 기반으로 주장을 뒷받침하는 것이 얼마나 중요한지를 배웠다.">
+              자세히 보기
+            </button>
+          </div>
+        </article>
+
+        <article class="creator-card reveal">
+          <div class="creator-card-inner">
+            <div class="creator-top">
+              <div>
+                <h3 class="creator-name">박민준</h3>
+                <span class="creator-role">개발 · 데이터 분석</span>
+              </div>
+              <span class="creator-badge">02</span>
+            </div>
+
+            <p class="creator-preview">
+              지금까지는 우리가 어떤 기술을 가지고 있고 어떤 것을 만들었는지에 대해서만 글을 써왔는데, 이렇게 SDG와 연결된 정책을 제시하는 웹사이트를 개발하며 기술이 아니라 사람을 설득하고 그것이 왜 필요한지에 대해 이야기하는 방법을 배우게 되었습니다.
+            </p>
+
+            <button
+              class="creator-toggle"
+              type="button"
+              data-name="박민준"
+              data-role="개발 · 데이터 분석"
+              data-badge="02"
+              data-content="지금까지는 우리가 어떤 기술을 가지고 있고 어떤 것을 만들었는지에 대해서만 글을 써왔는데, 이렇게 SDG와 연결된 정책을 제시하는 웹사이트를 개발하며 기술이 아니라 사람을 설득하고 그것이 왜 필요한지에 대해 이야기하는 방법을 배우게 되었습니다. 또한 그러한 접근법에서 웹페이지를 개발하다 보니, 일차원적으로 배열되는 보고서와는 달리 UI의 사소한 배치나 상호작용에 따라서도 사용자가 받아들이는 느낌이 변화한다는 것을 알게 되었습니다. 즉, 기술을 활용한 해결책 역시 단순히 기능적인 완성도만으로는 충분하지 않다는 점을 알게 되었습니다. 같은 시스템이라도 어떻게 설명하느냐에 설득력이 크게 달라질 수 있기 때문입니다.">
+              자세히 보기
+            </button>
+          </div>
+        </article>
+
+        <article class="creator-card reveal">
+          <div class="creator-card-inner">
+            <div class="creator-top">
+              <div>
+                <h3 class="creator-name">성희도</h3>
+                <span class="creator-role">아이디어 · 자료조사</span>
+              </div>
+              <span class="creator-badge">03</span>
+            </div>
+
+            <p class="creator-preview">
+              막연하게 멀게만 느껴져왔던 현장 피로도를 데이터로 시각화하면서, 수치 분석이 어떻게 실질적 사고 예방으로 이어질 수 있는지 느꼈습니다.
+            </p>
+
+            <button
+              class="creator-toggle"
+              type="button"
+              data-name="성희도"
+              data-role="아이디어 · 자료조사"
+              data-badge="03"
+              data-content="막연하게 멀게만 느껴져왔던 현장 피로도를 데이터로 시각화하면서, 수치 분석이 어떻게 실질적 사고 예방으로 이어질 수 있는지 느꼈습니다. 안전은 단순히 주의하는 것을 넘어, 철저한 데이터 기반의 시스템을 통해 확보된다는 것을 배울 수 있던 경험이었습니다.">
+              자세히 보기
+            </button>
+          </div>
+        </article>
+
+        <article class="creator-card reveal">
+          <div class="creator-card-inner">
+            <div class="creator-top">
+              <div>
+                <h3 class="creator-name">이지헌</h3>
+                <span class="creator-role">아이디어 · 자료조사</span>
+              </div>
+              <span class="creator-badge">04</span>
+            </div>
+
+            <p class="creator-preview">
+              이 프로젝트를 하면서 처음에는 장난스럽게 시작했지만, 실제로 찾아보니 우리가 다시 돌아봐야할 부분이 많다는 점을 깨달았다.
+            </p>
+
+            <button
+              class="creator-toggle"
+              type="button"
+              data-name="이지헌"
+              data-role="아이디어 · 자료조사"
+              data-badge="04"
+              data-content="이 프로젝트를 하면서 처음에는 장난스럽게 시작했지만, 실제로 찾아보니 우리가 다시 돌아봐야할 부분이 많다는 점을 깨달았다. 특히 주제를 정하는 과정에서 유엔 지속 가능 발전 목표에 대해서 알고 있었지만 하나하나 자세히 살펴보면서 모두 우리에게 꼭 필요한 것들이라는 점을 알게 되었다. 특히 처음에는 단순히 노동자의 노동 환경 개선을 목표로 했지만 조사하면서 동시에 작업 효율도 높일 수 있다는 점, 후속 조치 체계의 조직화를 이끌 수 있다는 점을 새롭게 알게 되었다.">
+              자세히 보기
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="creator-overlay" id="creatorOverlay" aria-hidden="true"></div>
+
+    <aside class="creator-drawer" id="creatorDrawer" aria-hidden="true" aria-labelledby="creatorDrawerTitle">
+      <div class="creator-drawer-header">
+        <div class="creator-drawer-top">
+          <div style="display:flex; gap:14px; align-items:flex-start;">
+            <span class="creator-drawer-badge" id="creatorDrawerBadge">01</span>
+            <div>
+              <h3 class="creator-drawer-title" id="creatorDrawerTitle">제작자</h3>
+              <span class="creator-drawer-role" id="creatorDrawerRole">역할</span>
+            </div>
+          </div>
+          <button class="creator-close" id="creatorDrawerClose" type="button" aria-label="닫기">×</button>
+        </div>
+      </div>
+      <div class="creator-drawer-body">
+        <p id="creatorDrawerContent"></p>
+      </div>
+    </aside>
+
+    <section class="comments-section" id="comments">
+      <div class="section-header reveal">
+        <div class="section-label">Community</div>
+        <h2>의견 남기기</h2>
+        <p>현장 적용 아이디어와 개선 의견을 자유롭게 남길 수 있습니다.</p>
+      </div>
+
+      <div class="comments-shell">
+        <div class="comment-panel reveal">
+          <h3>댓글 작성</h3>
+          <p>간단한 질문이나 피드백도 좋습니다.</p>
+          <form id="commentForm">
+            <div class="comment-field">
+              <label for="commentName">이름</label>
+              <input id="commentName" name="commentName" type="text" maxlength="30" placeholder="이름을 입력해 주세요" required />
+            </div>
+            <div class="comment-field">
+              <label for="commentMessage">내용</label>
+              <textarea id="commentMessage" name="commentMessage" maxlength="1000" placeholder="댓글을 입력해 주세요" required></textarea>
+            </div>
+            <div class="comment-actions">
+              <button type="submit" class="btn btn-primary">등록하기</button>
+              <button type="reset" class="btn btn-ghost">초기화</button>
+            </div>
+            <div class="comment-helper">댓글은 서버에 저장되며 모든 사용자에게 동일하게 표시됩니다.</div>
+          </form>
+        </div>
+
+        <div class="comment-panel reveal">
+          <h3>등록된 댓글</h3>
+          <p>서버에 저장된 댓글 목록입니다.</p>
+          <div class="comment-count" id="commentCount">총 0개</div>
+          <div class="comment-list" id="commentList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    PulseGate — Fatigue-Informed Workforce Safety Overview
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script>
+    const approvalYears = ['2020', '2021', '2022', '2023', '2024'];
+    const approvalCounts = [13, 19, 23, 31, 51];
+    const regressionIndex = approvalCounts.map((_, index) => index);
+
+    function mean(values) {
+      return values.reduce((sum, value) => sum + value, 0) / values.length;
+    }
+
+    function linearRegression(xs, ys) {
+      const xMean = mean(xs);
+      const yMean = mean(ys);
+      let numerator = 0;
+      let denominator = 0;
+
+      xs.forEach((x, index) => {
+        numerator += (x - xMean) * (ys[index] - yMean);
+        denominator += (x - xMean) ** 2;
+      });
+
+      const slope = numerator / denominator;
+      const intercept = yMean - slope * xMean;
+      const fitted = xs.map(x => intercept + slope * x);
+      const ssRes = ys.reduce((sum, y, index) => sum + ((y - fitted[index]) ** 2), 0);
+      const ssTot = ys.reduce((sum, y) => sum + ((y - yMean) ** 2), 0);
+      const rSquared = 1 - (ssRes / ssTot);
+
+      return { slope, intercept, fitted, rSquared };
+    }
+
+    function formatNumber(value, digits = 1) {
+      return Number(value).toFixed(digits);
+    }
+
+    function formatCount(value, digits = 1) {
+      return `${Number(value).toFixed(digits)}건`;
+    }
+
+    function formatPeople(value, digits = 1) {
+      return `${Number(value).toFixed(digits)}명`;
+    }
+
+    function buildGradient(ctx, chartArea, start, end) {
+      const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+      gradient.addColorStop(0, start);
+      gradient.addColorStop(1, end);
+      return gradient;
+    }
+
+    const regression = linearRegression(regressionIndex, approvalCounts);
+    const forecastIndex = [5, 6];
+    const forecastYears = ['2025', '2026'];
+    const forecastValues = forecastIndex.map(index => regression.intercept + regression.slope * index);
+    const allYears = [...approvalYears, ...forecastYears];
+    const regressionLine = [...regressionIndex, ...forecastIndex].map(index => regression.intercept + regression.slope * index);
+
+    const yoyRates = approvalCounts.map((value, index) => {
+      if (index === 0) return null;
+      return ((value - approvalCounts[index - 1]) / approvalCounts[index - 1]) * 100;
+    });
+
+    const cagr = ((approvalCounts[approvalCounts.length - 1] / approvalCounts[0]) ** (1 / (approvalCounts.length - 1)) - 1) * 100;
+
+    const forecastRows = [
+      ...approvalYears.map((year, index) => ({
+        year,
+        type: '실측',
+        count: approvalCounts[index],
+        delta: index === 0 ? null : approvalCounts[index] - approvalCounts[index - 1],
+        rate: yoyRates[index],
+        fitted: regression.fitted[index]
+      })),
+      {
+        year: '2025',
+        type: '예측',
+        count: forecastValues[0],
+        delta: forecastValues[0] - approvalCounts[approvalCounts.length - 1],
+        rate: ((forecastValues[0] - approvalCounts[approvalCounts.length - 1]) / approvalCounts[approvalCounts.length - 1]) * 100,
+        fitted: forecastValues[0]
+      },
+      {
+        year: '2026',
+        type: '예측',
+        count: forecastValues[1],
+        delta: forecastValues[1] - forecastValues[0],
+        rate: ((forecastValues[1] - forecastValues[0]) / forecastValues[0]) * 100,
+        fitted: forecastValues[1]
+      }
+    ];
+
+    const baselineDeathReference = 152;
+    const referenceApprovalCount = approvalCounts[approvalCounts.length - 1];
+    const noSystemDeaths = forecastValues.map(value => baselineDeathReference * (value / referenceApprovalCount));
+
+    const systemScenarios = [
+      { name: '보수적', coverage: 0.4, detection: 0.6, intervention: 0.5 },
+      { name: '기준', coverage: 0.6, detection: 0.7, intervention: 0.6 },
+      { name: '공격적', coverage: 0.8, detection: 0.8, intervention: 0.7 }
+    ].map((scenario) => {
+      const preventable = scenario.coverage * scenario.detection * scenario.intervention;
+      const withSystem2025 = noSystemDeaths[0] * (1 - preventable);
+      const withSystem2026 = noSystemDeaths[1] * (1 - preventable);
+
+      return {
+        ...scenario,
+        preventable,
+        withSystem2025,
+        reduction2025: noSystemDeaths[0] - withSystem2025,
+        withSystem2026,
+        reduction2026: noSystemDeaths[1] - withSystem2026
+      };
+    });
+
+    const baseScenario = systemScenarios.find(item => item.name === '기준');
+
+    const forecastTableBody = document.getElementById('forecastTableBody');
+    if (forecastTableBody) {
+      forecastTableBody.innerHTML = forecastRows.map((row) => `
+        <tr>
+          <td class="highlight-cell">${row.year}</td>
+          <td>${row.type}</td>
+          <td>${row.type === '예측' ? formatNumber(row.count, 1) : row.count}</td>
+          <td>${row.delta === null ? '-' : formatNumber(row.delta, 1)}</td>
+          <td>${row.rate === null ? '-' : `${formatNumber(row.rate, 1)}%`}</td>
+          <td>${formatNumber(row.fitted, 1)}</td>
+        </tr>
+      `).join('');
+    }
+
+    const systemScenarioBody = document.getElementById('systemScenarioBody');
+    if (systemScenarioBody) {
+      systemScenarioBody.innerHTML = systemScenarios.map((row) => `
+        <tr>
+          <td class="highlight-cell">${row.name}</td>
+          <td>${formatNumber(row.coverage * 100, 1)}%</td>
+          <td>${formatNumber(row.detection * 100, 1)}%</td>
+          <td>${formatNumber(row.intervention * 100, 1)}%</td>
+          <td>${formatNumber(row.preventable * 100, 1)}%</td>
+          <td>${formatNumber(row.withSystem2025, 1)}명</td>
+          <td>${formatNumber(row.reduction2025, 1)}명</td>
+          <td>${formatNumber(row.withSystem2026, 1)}명</td>
+          <td>${formatNumber(row.reduction2026, 1)}명</td>
+        </tr>
+      `).join('');
+    }
+
+    const regressionSlope = document.getElementById('regressionSlope');
+    const regressionSlopeInline = document.getElementById('regressionSlopeInline');
+    const regressionEquation = document.getElementById('regressionEquation');
+    const forecast2026 = document.getElementById('forecast2026');
+    const forecastSummary = document.getElementById('forecastSummary');
+    const cagrValue = document.getElementById('cagrValue');
+    const rSquaredValue = document.getElementById('rSquaredValue');
+    const latestIncreaseValue = document.getElementById('latestIncreaseValue');
+    const referenceDeathValue = document.getElementById('referenceDeathValue');
+    const basePreventableValue = document.getElementById('basePreventableValue');
+    const baseReduction2026Value = document.getElementById('baseReduction2026Value');
+
+    if (regressionSlope) regressionSlope.textContent = `+${formatNumber(regression.slope, 1)}`;
+    if (regressionSlopeInline) regressionSlopeInline.textContent = `${formatNumber(regression.slope, 1)}건`;
+    if (regressionEquation) regressionEquation.textContent = `y = ${formatNumber(regression.intercept, 1)} + ${formatNumber(regression.slope, 1)}x`;
+    if (forecast2026) forecast2026.textContent = formatCount(forecastValues[1]);
+    if (forecastSummary) forecastSummary.textContent = `${Math.round(forecastValues[0])} → ${Math.round(forecastValues[1])}`;
+    if (cagrValue) cagrValue.textContent = `${formatNumber(cagr, 1)}%`;
+    if (rSquaredValue) rSquaredValue.textContent = formatNumber(regression.rSquared, 3);
+    if (latestIncreaseValue) latestIncreaseValue.textContent = `${formatNumber(yoyRates[yoyRates.length - 1], 1)}%`;
+    if (referenceDeathValue) referenceDeathValue.textContent = `${baselineDeathReference}명`;
+    if (basePreventableValue) basePreventableValue.textContent = `${formatNumber(baseScenario.preventable * 100, 1)}%`;
+    if (baseReduction2026Value) baseReduction2026Value.textContent = formatPeople(baseScenario.reduction2026);
+
+    const commonAnimation = { duration: 1600, easing: 'easeOutCubic' };
+    const approvalCtx = document.getElementById('approvalChart');
+    const forecastCtx = document.getElementById('forecastChart');
+    const deathImpactCtx = document.getElementById('deathImpactChart');
+
+    let approvalChartInstance = null;
+    let forecastChartInstance = null;
+    let deathImpactChartInstance = null;
+
+    function createApprovalChart() {
+      if (!approvalCtx || approvalChartInstance) return;
+
+      const ctx = approvalCtx.getContext('2d');
+      approvalChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: approvalYears,
+          datasets: [{
+            label: '승인건수',
+            data: approvalCounts,
+            tension: 0.35,
+            fill: true,
+            borderWidth: 4,
+            borderColor: '#3b74d8',
+            pointBackgroundColor: '#ffffff',
+            pointBorderColor: '#3b74d8',
+            pointBorderWidth: 4,
+            pointRadius: 6,
+            pointHoverRadius: 7,
+            backgroundColor: (context) => {
+              const { chart } = context;
+              const { ctx, chartArea } = chart;
+              if (!chartArea) return 'rgba(59,116,216,0.16)';
+              return buildGradient(ctx, chartArea, 'rgba(59,116,216,0.03)', 'rgba(59,116,216,0.18)');
+            }
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: commonAnimation,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(18,18,22,0.96)',
+              padding: 14,
+              titleColor: '#fff',
+              bodyColor: 'rgba(255,255,255,0.88)',
+              borderColor: 'rgba(255,255,255,0.12)',
+              borderWidth: 1,
+              cornerRadius: 14
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#7b7b82', font: { size: 12 } },
+              border: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              suggestedMax: 60,
+              ticks: {
+                color: '#7b7b82',
+                callback: (value) => `${value}건`,
+                font: { size: 12 }
+              },
+              grid: { color: 'rgba(29,29,31,0.08)' },
+              border: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    function createSimulationCharts() {
+      if (forecastCtx && !forecastChartInstance) {
+        const ctx = forecastCtx.getContext('2d');
+        forecastChartInstance = new Chart(ctx, {
+          data: {
+            labels: allYears,
+            datasets: [
+              {
+                type: 'line',
+                label: '실측 승인건수',
+                data: [...approvalCounts, null, null],
+                tension: 0.3,
+                borderWidth: 3,
+                borderColor: '#7dd3fc',
+                pointBackgroundColor: '#ffffff',
+                pointBorderColor: '#7dd3fc',
+                pointBorderWidth: 3,
+                pointRadius: 5,
+                fill: false
+              },
+              {
+                type: 'line',
+                label: '선형회귀 추세선',
+                data: regressionLine,
+                tension: 0.2,
+                borderWidth: 3,
+                borderDash: [8, 8],
+                borderColor: '#ffd166',
+                pointRadius: 0,
+                fill: false
+              },
+              {
+                type: 'bar',
+                label: '예측 구간',
+                data: [null, null, null, null, null, forecastValues[0], forecastValues[1]],
+                backgroundColor: (context) => {
+                  const { chart } = context;
+                  const { ctx, chartArea } = chart;
+                  if (!chartArea) return 'rgba(52,199,89,0.55)';
+                  return buildGradient(ctx, chartArea, 'rgba(52,199,89,0.2)', 'rgba(52,199,89,0.9)');
+                },
+                borderRadius: 12,
+                borderSkipped: false,
+                maxBarThickness: 48
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: commonAnimation,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(18,18,22,0.96)',
+                padding: 14,
+                titleColor: '#fff',
+                bodyColor: 'rgba(255,255,255,0.88)',
+                borderColor: 'rgba(255,255,255,0.12)',
+                borderWidth: 1,
+                cornerRadius: 14
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 12 } },
+                border: { display: false }
+              },
+              y: {
+                beginAtZero: true,
+                suggestedMax: 75,
+                ticks: {
+                  color: 'rgba(255,255,255,0.7)',
+                  callback: (value) => `${value}건`,
+                  font: { size: 12 }
+                },
+                grid: { color: 'rgba(255,255,255,0.08)' },
+                border: { display: false }
+              }
+            }
+          }
+        });
+      }
+
+      if (deathImpactCtx && !deathImpactChartInstance) {
+        const ctx = deathImpactCtx.getContext('2d');
+        deathImpactChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: forecastYears,
+            datasets: [
+              {
+                label: '미도입 예상 사망자',
+                data: noSystemDeaths,
+                backgroundColor: (context) => {
+                  const { chart } = context;
+                  const { ctx, chartArea } = chart;
+                  if (!chartArea) return 'rgba(255,138,128,0.85)';
+                  return buildGradient(ctx, chartArea, 'rgba(255,138,128,0.28)', 'rgba(255,138,128,0.95)');
+                },
+                borderRadius: 12,
+                borderSkipped: false,
+                maxBarThickness: 50
+              },
+              {
+                label: '도입 후 예상 사망자(기준 시나리오)',
+                data: [baseScenario.withSystem2025, baseScenario.withSystem2026],
+                backgroundColor: (context) => {
+                  const { chart } = context;
+                  const { ctx, chartArea } = chart;
+                  if (!chartArea) return 'rgba(52,199,89,0.85)';
+                  return buildGradient(ctx, chartArea, 'rgba(52,199,89,0.2)', 'rgba(52,199,89,0.95)');
+                },
+                borderRadius: 12,
+                borderSkipped: false,
+                maxBarThickness: 50
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: commonAnimation,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(18,18,22,0.96)',
+                padding: 14,
+                titleColor: '#fff',
+                bodyColor: 'rgba(255,255,255,0.88)',
+                borderColor: 'rgba(255,255,255,0.12)',
+                borderWidth: 1,
+                cornerRadius: 14,
+                callbacks: {
+                  label: (context) => `${context.dataset.label}: ${formatNumber(context.parsed.y, 1)}명`
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: 'rgba(255,255,255,0.7)', font: { size: 12 } },
+                border: { display: false }
+              },
+              y: {
+                beginAtZero: true,
+                suggestedMax: 200,
+                ticks: {
+                  color: 'rgba(255,255,255,0.7)',
+                  callback: (value) => `${value}명`,
+                  font: { size: 12 }
+                },
+                grid: { color: 'rgba(255,255,255,0.08)' },
+                border: { display: false }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    /* 승인통계 그래프는 바로 생성 */
+    createApprovalChart();
+
+    /* 아래 시뮬레이션 그래프만 섹션 진입 시 생성 */
+    let simulationChartsInitialized = false;
+    const simulationTarget = document.getElementById('simulation');
+    if (simulationTarget) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !simulationChartsInitialized) {
+            createSimulationCharts();
+            simulationChartsInitialized = true;
+          }
+        });
+      }, { threshold: 0.2 });
+
+      sectionObserver.observe(simulationTarget);
+    }
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    const commentForm = document.getElementById('commentForm');
+    const commentName = document.getElementById('commentName');
+    const commentMessage = document.getElementById('commentMessage');
+    const commentList = document.getElementById('commentList');
+    const commentCount = document.getElementById('commentCount');
+
+    function escapeCommentHtml(value) {
+      return value
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function formatCommentDate(isoString) {
+      const date = new Date(isoString);
+      return new Intl.DateTimeFormat('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
+    }
+
+    async function fetchComments() {
+      const res = await fetch('/api/comments');
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || '댓글을 불러오지 못했습니다.');
+      }
+
+      return data.comments || [];
+    }
+
+    async function createComment(payload) {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || '댓글 등록에 실패했습니다.');
+      }
+
+      return data.comment;
+    }
+
+    async function removeComment(id) {
+      const res = await fetch(`/api/comments?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE'
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || '댓글 삭제에 실패했습니다.');
+      }
+
+      return data;
+    }
+
+    async function renderComments() {
+      if (!commentList || !commentCount) return;
+
+      try {
+        const comments = await fetchComments();
+        commentCount.textContent = `총 ${comments.length}개`;
+
+        if (!comments.length) {
+          commentList.innerHTML =
+            '<div class="empty-comment">아직 등록된 댓글이 없습니다. 첫 번째 의견을 남겨 보세요.</div>';
+          return;
+        }
+
+        commentList.innerHTML = comments.map(comment => `
+          <article class="comment-item">
+            <div class="comment-meta">
+              <div class="comment-name">${escapeCommentHtml(comment.name)}</div>
+              <div class="comment-date">${formatCommentDate(comment.createdAt)}</div>
+            </div>
+            <p class="comment-body">${escapeCommentHtml(comment.message)}</p>
+            <div class="comment-item-actions">
+              <button class="comment-text-btn" type="button" onclick="handleDeleteComment('${comment.id}')">삭제</button>
+            </div>
+          </article>
+        `).join('');
+      } catch (error) {
+        commentList.innerHTML =
+          `<div class="empty-comment">${escapeCommentHtml(error.message)}</div>`;
+      }
+    }
+
+    async function handleDeleteComment(id) {
+      const ok = window.confirm('이 댓글을 삭제할까요?');
+      if (!ok) return;
+
+      try {
+        await removeComment(id);
+        await renderComments();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    if (commentForm) {
+      commentForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const name = commentName.value.trim();
+        const message = commentMessage.value.trim();
+
+        if (!name || !message) {
+          alert('이름과 내용을 모두 입력해 주세요.');
+          return;
+        }
+
+        try {
+          await createComment({ name, message });
+          commentForm.reset();
+          await renderComments();
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+    }
+
+    window.handleDeleteComment = handleDeleteComment;
+    renderComments();
+
+    /* creator slide-over */
+    const creatorButtons = document.querySelectorAll('.creator-toggle');
+    const creatorOverlay = document.getElementById('creatorOverlay');
+    const creatorDrawer = document.getElementById('creatorDrawer');
+    const creatorDrawerBadge = document.getElementById('creatorDrawerBadge');
+    const creatorDrawerTitle = document.getElementById('creatorDrawerTitle');
+    const creatorDrawerRole = document.getElementById('creatorDrawerRole');
+    const creatorDrawerContent = document.getElementById('creatorDrawerContent');
+    const creatorDrawerClose = document.getElementById('creatorDrawerClose');
+
+    let lastFocusedButton = null;
+
+    function openCreatorDrawer(button) {
+      if (!button) return;
+      lastFocusedButton = button;
+
+      creatorDrawerBadge.textContent = button.dataset.badge || '';
+      creatorDrawerTitle.textContent = button.dataset.name || '';
+      creatorDrawerRole.textContent = button.dataset.role || '';
+      creatorDrawerContent.textContent = button.dataset.content || '';
+
+      creatorOverlay.classList.add('is-open');
+      creatorDrawer.classList.add('is-open');
+      creatorOverlay.setAttribute('aria-hidden', 'false');
+      creatorDrawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('drawer-open');
+
+      setTimeout(() => {
+        creatorDrawerClose.focus();
+      }, 50);
+    }
+
+    function closeCreatorDrawer() {
+      creatorOverlay.classList.remove('is-open');
+      creatorDrawer.classList.remove('is-open');
+      creatorOverlay.setAttribute('aria-hidden', 'true');
+      creatorDrawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('drawer-open');
+
+      if (lastFocusedButton) {
+        lastFocusedButton.focus();
+      }
+    }
+
+    creatorButtons.forEach((button) => {
+      button.addEventListener('click', () => openCreatorDrawer(button));
+    });
+
+    if (creatorOverlay) {
+      creatorOverlay.addEventListener('click', closeCreatorDrawer);
+    }
+
+    if (creatorDrawerClose) {
+      creatorDrawerClose.addEventListener('click', closeCreatorDrawer);
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && creatorDrawer.classList.contains('is-open')) {
+        closeCreatorDrawer();
+      }
+    });
+  </script>
+</body>
+</html>

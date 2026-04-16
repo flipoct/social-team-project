@@ -1,0 +1,12 @@
+{
+  "name": "pulsegate-vercel",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  }
+}
